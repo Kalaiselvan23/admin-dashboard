@@ -51,7 +51,8 @@ exports.getDistributedTasks = async (req, res) => {
       firstName: task.firstName,
       phone: task.phone,
       notes: task.notes,
-      assignedAt: task._id.getTimestamp(), 
+      assignedAt: task._id.getTimestamp(),
+      status:task.status,
     }));
 
     res.json(formattedTasks);

@@ -7,7 +7,7 @@ exports.addAgent = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: "Email already in use" });
 
-    const newUser = new User({ name, email, mobile, password, role: "agent" });
+    const newUser = new User({name, email, mobile, password, role: "agent" });
     await newUser.save();
     res.json({ message: "Agent created successfully" });
   } catch (error) {
@@ -33,6 +33,30 @@ exports.getAgentById = async (req, res) => {
     res.json(agent);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
+  }
+};
+
+
+exports.updateAgentById = async (req, res) => {
+  try {
+    const agent = await User.findById(req.params.id);
+
+    if (!agent || agent.role !== "agent") {
+      return res.status(404).json({ error: "Agent not found" });
+    }
+
+    const { name, email, mobile, status } = req.body;
+    if (name) agent.name = name;
+    if (email) agent.email = email;
+    if (mobile) agent.mobile = mobile;
+    if (status) agent.status = status;
+
+    await agent.save();
+
+    return res.status(200).json({ message: "Agent updated successfully", agent });
+  } catch (error) {
+    console.error("Update error:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
   }
 };
 
