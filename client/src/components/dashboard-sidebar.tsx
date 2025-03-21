@@ -10,6 +10,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { BarChart3, Users, FileSpreadsheet, ListChecks, Menu, LogOut } from "lucide-react"
 import { useAuth } from "@/contexts/AuthContext"
+import { toast } from "sonner"
 
 interface NavItem {
   title: string
@@ -62,6 +63,7 @@ function MobileSidebar({
   const navigate = useNavigate()
 
   const handleLogout = () => {
+    toast.loading("Logging out..")
     logout()
     navigate("/")
   }
