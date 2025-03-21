@@ -120,12 +120,20 @@ To test locally:
 
 ---
 
-## **🎯 Features**
-✅ **React Frontend** - Deployed on Netlify  
-✅ **Node.js Backend** - Deployed on Render  
-✅ **MongoDB Database**  
-✅ **JWT Authentication**  
-✅ **REST API with CRUD Operations**  
+**Sample Image**
+Dashboard:
+![image](https://github.com/user-attachments/assets/ba84a7cb-0d16-4b9f-b199-1e01d73f265d)
+Agents List:
+![image](https://github.com/user-attachments/assets/a82b1cb1-a309-417d-87bd-e2df95b9d17d)
+Add Agent:
+![image](https://github.com/user-attachments/assets/0e93c9b5-cc13-48f1-99e7-4376016929b0)
+Upload CSV:
+![image](https://github.com/user-attachments/assets/c48f1f13-367f-4877-a6db-0468d39621fc)
+Task Distributed List:
+![image](https://github.com/user-attachments/assets/2704896e-0e6c-4924-9ca0-3cc3a2a0fdb0)
+
+
+
 
 ---
 
