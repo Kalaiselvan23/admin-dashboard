@@ -17,7 +17,7 @@ exports.addAgent = async (req, res) => {
 
 exports.getAllAgents = async (req, res) => {
   try {
-    const agents = await User.find({ role: "agent" }).select("-password"); // Exclude password from response
+    const agents = await User.find({ role: "agent" }).select("-password");
     res.json(agents);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });

@@ -3,20 +3,20 @@ const csvParser = require("csv-parser");
 const fs = require("fs");
 const User = require("../models/User");
 const Task = require("../models/Task");
+const File = require("../models/File")
 
-// Multer Storage
 const upload = multer({ dest: "uploads/" });
 
-// Upload & Distribute CSV
-exports.uploadCSV = async (req, res) => {
-  if (req.user.role !== "admin") return res.status(403).json({ message: "Access Denied!" });
 
+exports.uploadCSV = async (req, res) => {
   const filePath = req.file.path;
   const results = [];
-  
+
   fs.createReadStream(filePath)
     .pipe(csvParser())
-    .on("data", (data) => results.push(data))
+    .on("data", (data) => {
+      results.push(data);
+    })
     .on("end", async () => {
       try {
         const agents = await User.find({ role: "agent" });
@@ -29,10 +29,34 @@ exports.uploadCSV = async (req, res) => {
           index++;
         }
 
+        await new File({ filename: req.file.originalname }).save();
+
         fs.unlinkSync(filePath);
         res.json({ message: "CSV uploaded and distributed successfully!" });
       } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Server error" });
       }
     });
+};
+
+exports.getDistributedTasks = async (req, res) => {
+  try {
+    const tasks = await Task.find().populate("assignedTo", "name email");
+
+    const formattedTasks = tasks.map(task => ({
+      id: task._id,
+      agentName: task.assignedTo ? task.assignedTo.name : "Unassigned",
+      agentEmail: task.assignedTo ? task.assignedTo.email : "N/A",
+      firstName: task.firstName,
+      phone: task.phone,
+      notes: task.notes,
+      assignedAt: task._id.getTimestamp(), 
+    }));
+
+    res.json(formattedTasks);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
 };
