@@ -5,6 +5,7 @@ type User = {
   email: string;
   mobile: string;
   role: string;
+  lastLogin:Date;
 };
 
 type AuthContextType = {

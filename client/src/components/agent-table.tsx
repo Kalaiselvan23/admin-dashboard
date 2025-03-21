@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
-import axios from "axios"
 import {
   type ColumnDef,
   flexRender,
@@ -17,14 +16,6 @@ import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -34,7 +25,9 @@ import {
 } from "@/components/ui/dialog"
 import { ArrowUpDown, MoreHorizontal, Search } from "lucide-react"
 import Api from "@/lib/Api"
-import {toast} from "sonner"
+import { toast } from "sonner"
+import { Modal } from "./Model"
+
 interface Agent {
   id: string
   name: string
@@ -44,16 +37,18 @@ interface Agent {
   createdAt: string
 }
 
+interface AgentTableProps {
+  onEdit: (agent: Agent) => void
+}
+
 const fetchAgents = async () => {
   const response = await Api.get("agents")
   return response.data
 }
 
-export function AgentTable() {
+export function AgentTable({ onEdit }: AgentTableProps) {
   const queryClient = useQueryClient()
-
   const { data: agents = [], isLoading } = useQuery({ queryKey: ["agents"], queryFn: fetchAgents })
-
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
@@ -70,7 +65,7 @@ export function AgentTable() {
       setAgentToDelete(null)
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to delete agent. Try again.", variant: "destructive" })
+      toast.error("Failed to delete agent. Try again")
     },
   })
 
@@ -102,7 +97,7 @@ export function AgentTable() {
         <Button variant="ghost" onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}>
           Created At
           <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+      </Button>
       ),
       cell: ({ row }) => {
         const date = new Date(row.getValue("createdAt"))
@@ -111,32 +106,31 @@ export function AgentTable() {
     },
     {
       id: "actions",
+      header:"Actions",
       cell: ({ row }) => {
         const agent = row.original
-
         return (
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="h-8 w-8 p-0">
-                <MoreHorizontal className="h-4 w-4" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem
-                onClick={() => toast({ title: "Edit Agent", description: `Editing ${agent.name}` })}
-              >
-                Edit
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem className="text-red-600" onClick={() => {
+          <div className="flex space-x-1">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2 text-xs"
+              onClick={() => onEdit(agent)}
+            >
+              Edit
+            </Button>
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              className="h-8 px-2 text-xs text-red-600 hover:text-red-700 hover:bg-red-50"
+              onClick={() => {
                 setAgentToDelete(agent)
                 setDeleteDialogOpen(true)
-              }}>
-                Delete
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+              }}
+            >
+              Delete
+            </Button>
+          </div>
         )
       },
     },
@@ -167,7 +161,6 @@ export function AgentTable() {
           />
         </div>
       </div>
-
       <Card>
         <div className="rounded-md border">
           <Table>
@@ -208,21 +201,26 @@ export function AgentTable() {
           </Table>
         </div>
       </Card>
-
-      <Dialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Agent</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to delete {agentToDelete?.name}? This action cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button>
-            <Button variant="destructive" onClick={() => agentToDelete && deleteMutation.mutate(agentToDelete.id)}>Delete</Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+       <Modal
+        isOpen={deleteDialogOpen}
+        onClose={() => setDeleteDialogOpen(false)}
+        title="Delete Agent"
+      >
+        <p>Are you sure you want to delete <strong>{agentToDelete?.name}</strong>? This action cannot be undone.</p>
+        <div className="mt-4 flex justify-end">
+          {/* <Button variant="outline" onClick={() => setDeleteDialogOpen(false)}>Cancel</Button> */}
+          <Button
+            variant="destructive"
+            onClick={() => {
+              if (agentToDelete) {
+                deleteMutation.mutate(agentToDelete.id);
+              }
+            }}
+          >
+            Delete
+          </Button>
+        </div>
+      </Modal>
     </>
   )
 }

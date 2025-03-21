@@ -39,7 +39,7 @@ export function LoginForm() {
     },
     onSuccess: (data) => {
       login(data.user, data.token); 
-      toast("Login successful");
+      toast.success("Login successful");
       navigate("/dashboard");
     },
     onError: () => {

@@ -61,6 +61,7 @@ export function FileUploadForm() {
       toast("File uploaded successfully and Data has been distributed to agents" )
       setFile(null)
       setUploadProgress(100)
+      toast.success("File uploaded Successfully")
 
       const fileInput = document.getElementById("file-upload") as HTMLInputElement
       if (fileInput) fileInput.value = ""
