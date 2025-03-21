@@ -32,7 +32,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ArrowUpDown, Search } from "lucide-react";
-import { toast } from "sonner";
 import Api from "@/lib/Api";
 
 interface Task {
@@ -168,7 +167,7 @@ export function DistributedListTable() {
             placeholder="Search agents..."
             value={(table.getColumn("agentName")?.getFilterValue() as string) ?? ""}
             onChange={(event) =>
-              table.getColumn("agentName")?.setFilterValue(event.target.value)
+              table.getColumn("agentName")?.setFilterValue(event?.target?.value)
             }
             className="pl-8"
           />

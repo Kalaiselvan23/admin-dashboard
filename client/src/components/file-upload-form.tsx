@@ -57,7 +57,7 @@ export function FileUploadForm() {
       })
       return response.data
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       toast("File uploaded successfully and Data has been distributed to agents" )
       setFile(null)
       setUploadProgress(100)

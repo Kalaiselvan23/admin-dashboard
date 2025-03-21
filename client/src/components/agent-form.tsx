@@ -72,7 +72,7 @@ export function AgentForm({ agentToEdit, onComplete }: AgentFormProps) {
     },
     onSuccess: () => {
       toast.success("Agent has been added successfully")
-      queryClient.invalidateQueries(["agents"])
+      queryClient.invalidateQueries({queryKey:["agents"]})
       form.reset()
       if (onComplete) onComplete()
     },
@@ -91,7 +91,7 @@ export function AgentForm({ agentToEdit, onComplete }: AgentFormProps) {
     },
     onSuccess: () => {
       toast.success("Agent has been updated successfully")
-      queryClient.invalidateQueries(["agents"])
+      queryClient.invalidateQueries({queryKey:["agents"]})
       if (onComplete) onComplete()
     },
     onError: () => {

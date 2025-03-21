@@ -12,6 +12,7 @@ import { BarChart3, Users, FileSpreadsheet, ListChecks, Menu, LogOut } from "luc
 import { useAuth } from "@/contexts/AuthContext"
 import { toast } from "sonner"
 
+
 interface NavItem {
   title: string
   href: string
@@ -24,6 +25,7 @@ const navItems: NavItem[] = [
   { title: "Upload CSV", href: "/dashboard/upload", icon: FileSpreadsheet },
   { title: "Distributed Lists", href: "/dashboard/distributed-list", icon: ListChecks },
 ]
+
 
 export function DashboardSidebar() {
   const pathname = useLocation().pathname

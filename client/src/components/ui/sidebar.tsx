@@ -678,6 +678,7 @@ function SidebarMenuSubButton({
   const Comp = asChild ? Slot : "a"
 
   return (
+    //@ts-check
     <Comp
       data-slot="sidebar-menu-sub-button"
       data-sidebar="menu-sub-button"

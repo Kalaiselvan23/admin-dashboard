@@ -15,21 +15,13 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { ArrowUpDown, MoreHorizontal, Search } from "lucide-react"
+import { ArrowUpDown, Search } from "lucide-react"
 import Api from "@/lib/Api"
 import { toast } from "sonner"
 import { Modal } from "./Model"
 
 interface Agent {
-  id: string
+  _id: string
   name: string
   email: string
   mobile: string
@@ -156,7 +148,7 @@ export function AgentTable({ onEdit }: AgentTableProps) {
           <Input
             placeholder="Search agents..."
             value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-            onChange={(event) => table.getColumn("name")?.setFilterValue(event.target.value)}
+            onChange={(event) => table.getColumn("name")?.setFilterValue(event?.target?.value || "")}            
             className="pl-8"
           />
         </div>
