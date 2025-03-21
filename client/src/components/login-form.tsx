@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
 import { useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
@@ -12,8 +11,10 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Input } from "@/components/ui/input"
 import { AlertCircle } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import {toast} from "sonner"
+import { toast } from "sonner"
 import Api from "@/lib/Api"
+import { useAuth } from "@/contexts/AuthContext" 
+
 const formSchema = z.object({
   email: z.string().email({ message: "Please enter a valid email address" }),
   password: z.string().min(6, { message: "Password must be at least 6 characters" }),
@@ -21,33 +22,30 @@ const formSchema = z.object({
 
 export function LoginForm() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [error, setError] = useState<string | null>(null)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
+    defaultValues: { email: "", password: "" },
   })
 
-  // React Query Mutation for Login
   const loginMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
       const response = await Api.post("auth/login", values, {
         headers: { "Content-Type": "application/json" },
-      })
-      return response.data
+      });
+      return response.data;
     },
     onSuccess: (data) => {
-      // localStorage.setItem("token", data.token) // Store JWT in localStorage
-      toast("Login successfull");
-      navigate("/dashboard")
+      login(data.user, data.token); 
+      toast("Login successful");
+      navigate("/dashboard");
     },
     onError: () => {
-      setError("Invalid email or password")
+      setError("Invalid email or password");
     },
-  })
+  });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setError(null)
