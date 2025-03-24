@@ -7,5 +7,5 @@ const upload = multer({ dest: "uploads/" });
 const router = express.Router();
 
 router.post("/upload",auth,upload.single("file"), uploadCSV);
-router.get("/distributed", getDistributedTasks);
+router.get("/distributed",auth, getDistributedTasks);
 module.exports = router;
