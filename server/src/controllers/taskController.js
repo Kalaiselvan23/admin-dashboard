@@ -177,7 +177,7 @@ exports.getDistributedTasks = async (req, res) => {
     const agentsWithTasks = await Promise.all(
       agents.map(async (agent) => {
         const tasks = await Task.find({ assignedTo: agent._id }).select(
-          "taskName notes status"
+          "taskName notes status deadline"
         );
         return {
           id: agent._id,
