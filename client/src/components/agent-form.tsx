@@ -77,7 +77,7 @@ export function AgentForm({ agentToEdit, onComplete }: AgentFormProps) {
       if (onComplete) onComplete()
     },
     onError: () => {
-      toast({ title: "Error", description: "Failed to create agent. Please try again.", variant: "destructive" })
+      toast.error("Failed to create agent. Please try again.")
     },
   })
 

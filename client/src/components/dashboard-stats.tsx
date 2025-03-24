@@ -55,11 +55,13 @@ import { Users, FileSpreadsheet, ListChecks, CheckCircle } from "lucide-react";
 import Api from "@/lib/Api";
 
 const fetchDashboardStats=async()=>{
-  const res=await Api.get("stats")
+  const res=await Api.get("stats",)
   const data=await res.data;
+  console.log(res.data);
   return data;
 }
 export function DashboardStats() {
+
   const { data, isLoading, error } = useQuery({
     queryKey: ["dashboardStats"],
     queryFn: fetchDashboardStats,
